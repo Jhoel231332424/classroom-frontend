@@ -1,5 +1,5 @@
 import { BaseRecord, DataProvider, GetListParams, GetListResponse } from "@refinedev/core";
-import { Subject } from "../types";
+import { Subject } from "@/types";
 
 export const mockSubjects: Subject[] = [
     {
