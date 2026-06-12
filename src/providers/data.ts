@@ -1,62 +1,88 @@
-import { BaseRecord, DataProvider, GetListParams, GetListResponse } from "@refinedev/core";
-import { Subject } from "@/types";
+import { createDataProvider, CreateDataProviderOptions } from "@refinedev/rest";
 
-export const mockSubjects: Subject[] = [
-    {
-        id: 1,
-        code: "CS101",
-        name: "Introduction to Computer Science",
-        department: "CS",
-        description: "An introductory course covering the fundamentals of programming and computer systems.",
-        created_at: new Date().toISOString(),
-    },
-    {
-        id: 2,
-        code: "MATH201",
-        name: "Calculus II",
-        department: "Math",
-        description: "Advanced study of integration, sequences, and series.",
-        created_at: new Date().toISOString(),
-    },
-    {
-        id: 3,
-        code: "ENG105",
-        name: "Creative Writing",
-        department: "English",
-        description: "Explore various forms of creative writing, including fiction, poetry, and creative non-fiction.",
-        created_at: new Date().toISOString(),
-    },
-];
+import { CreateResponse, GetOneResponse, ListResponse } from "@/types";
+import { BACKEND_BASE_URL } from "@/constants";
 
-export const dataProvider: DataProvider = {
-    getList: async <TData extends BaseRecord = BaseRecord>({ resource }: GetListParams): Promise<GetListResponse<TData>> => {
-        if (resource !== 'subjects') {
-            return { data: [] as TData[], total: 0 };
-        }
+const options: CreateDataProviderOptions = {
+    getList: {
+        getEndpoint: ({ resource }) => resource,
 
-        return {
-            data: mockSubjects as unknown as TData[],
-            total: mockSubjects.length,
-        };
+        buildQueryParams: async ({ resource, pagination, filters }) => {
+            const params: Record<string, string | number> = {};
+
+            if (pagination?.mode !== "off") {
+                const page = pagination?.currentPage ?? 1;
+                const pageSize = pagination?.pageSize ?? 10;
+
+                params.page = page;
+                params.limit = pageSize;
+            }
+
+            filters?.forEach((filter) => {
+                const field = "field" in filter ? filter.field : "";
+                const value = String(filter.value);
+
+                if (field === "role") {
+                    params.role = value;
+                }
+
+                if (resource === "departments") {
+                    if (field === "name" || field === "code") params.search = value;
+                }
+
+                if (resource === "users") {
+                    if (field === "search" || field === "name" || field === "email") {
+                        params.search = value;
+                    }
+                }
+
+                if (resource === "subjects") {
+                    if (field === "department") params.department = value;
+                    if (field === "name" || field === "code") params.search = value;
+                }
+
+                if (resource === "classes") {
+                    if (field === "name") params.search = value;
+                    if (field === "subject") params.subject = value;
+                    if (field === "teacher") params.teacher = value;
+                }
+            });
+
+            return params;
+        },
+
+        mapResponse: async (response) => {
+            const payload: ListResponse = await response.json();
+            return payload.data ?? [];
+        },
+
+        getTotalCount: async (response) => {
+            const payload: ListResponse = await response.json();
+            return payload.pagination?.total ?? payload.data?.length ?? 0;
+        },
     },
 
-    getOne: async () => {
-        throw new Error("Function not present in mock data provider.");
+    create: {
+        getEndpoint: ({ resource }) => resource,
+
+        buildBodyParams: async ({ variables }) => variables,
+
+        mapResponse: async (response) => {
+            const json: CreateResponse = await response.json();
+            return json.data ?? {};
+        },
     },
 
-    create: async () => {
-        throw new Error("Function not present in mock data provider.");
-    },
+    getOne: {
+        getEndpoint: ({ resource, id }) => `${resource}/${id}`,
 
-    update: async () => {
-        throw new Error("Function not present in mock data provider.");
-    },
-
-    deleteOne: async () => {
-        throw new Error("Function not present in mock data provider.");
-    },
-
-    getApiUrl: () => {
-        return "";
+        mapResponse: async (response) => {
+            const json: GetOneResponse = await response.json();
+            return json.data ?? {};
+        },
     },
 };
+
+const { dataProvider } = createDataProvider(BACKEND_BASE_URL, options);
+
+export { dataProvider };
