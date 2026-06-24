@@ -1,10 +1,10 @@
-import { GitHubBanner, Refine } from "@refinedev/core";
+import { Refine } from "@refinedev/core";
 import { DevtoolsPanel, DevtoolsProvider } from "@refinedev/devtools";
 import { RefineKbar, RefineKbarProvider } from "@refinedev/kbar";
 
 import routerProvider, {
-  DocumentTitleHandler,
-  UnsavedChangesNotifier,
+    DocumentTitleHandler,
+    UnsavedChangesNotifier,
 } from "@refinedev/react-router";
 import { BrowserRouter, Route, Routes } from "react-router";
 import "./App.css";
@@ -14,78 +14,65 @@ import { ThemeProvider } from "./components/refine-ui/theme/theme-provider";
 import {Layout} from "@/components/refine-ui/layout/layout.tsx";
 import { dataProvider } from "./providers/data";
 import Dashboard from "@/pages/dashboard.tsx";
-import {BookOpen, GraduationCap, Home} from "lucide-react";
+import {Home, Package} from "lucide-react";
 import {Outlet} from "react-router";
-import SubjectsList from "@/pages/subjects/list.tsx";
-
-import ClassesList from "@/pages/classes/list.tsx";
-import ClassesCreate from "@/pages/classes/create.tsx";
+import ProductsList from "@/pages/products/list.tsx";
+import ProductsCreate from "@/pages/products/create.tsx";
 
 function App() {
-  return (
-    <BrowserRouter>
-      <RefineKbarProvider>
-        <ThemeProvider>
-          <DevtoolsProvider>
-            <Refine
-              dataProvider={dataProvider}
-              notificationProvider={useNotificationProvider()}
-              routerProvider={routerProvider}
-              options={{
-                syncWithLocation: true,
-                warnWhenUnsavedChanges: true,
-                projectId: "MC4OJp-aMFoEL-jB8n0c",
-              }}
-              resources={[
-                  {
-                      name: 'dashboard',
-                      list: '/',
-                      meta: {label: 'Home', icon: <Home/>}
-                  },
-                  {
-                      name: 'subjects',
-                      list: '/subjects',
-                      create: '/subjects/create',
-                      meta: {label: 'Subjects', icon: <BookOpen/>}
-                  },
-                  {
-                      name: 'classes',
-                      list: '/classes',
-                      create: '/classes/create',
-                      meta: {label: 'Classes', icon: <GraduationCap/>}
-                  }
-              ]}
-            >
-              <Routes>
-                  <Route element={
-                      <Layout>
-                          <Outlet />
-                      </Layout>
-                  }>
-                      <Route path="/" element={<Dashboard />} />
+    return (
+        <BrowserRouter>
+            <RefineKbarProvider>
+                <ThemeProvider>
+                    <DevtoolsProvider>
+                        <Refine
+                            dataProvider={dataProvider}
+                            notificationProvider={useNotificationProvider()}
+                            routerProvider={routerProvider}
+                            options={{
+                                syncWithLocation: true,
+                                warnWhenUnsavedChanges: true,
+                                projectId: "MC4OJp-aMFoEL-jB8n0c",
+                            }}
+                            resources={[
+                                {
+                                    name: 'dashboard',
+                                    list: '/',
+                                    meta: {label: 'Home', icon: <Home/>}
+                                },
+                                {
+                                    name: 'products',
+                                    list: '/products',
+                                    create: '/products/create',
+                                    meta: {label: 'Productos', icon: <Package/>}
+                                }
+                            ]}
+                        >
+                            <Routes>
+                                <Route element={
+                                    <Layout>
+                                        <Outlet />
+                                    </Layout>
+                                }>
+                                    <Route path="/" element={<Dashboard />} />
 
-                        <Route path="subjects">
-                            <Route index element={<SubjectsList/>}/>
-                            <Route path="create" element={<div>Create Subject (Not implemented)</div>}/>
-                        </Route>
-                        <Route path="classes">
-                          <Route index element={<ClassesList/>}/>
-                          <Route path="create" element={<ClassesCreate/>}/>
-                        </Route>
-                  </Route>
-
-              </Routes>
-              <Toaster />
-              <RefineKbar />
-              <UnsavedChangesNotifier />
-              <DocumentTitleHandler />
-            </Refine>
-            <DevtoolsPanel />
-          </DevtoolsProvider>
-        </ThemeProvider>
-      </RefineKbarProvider>
-    </BrowserRouter>
-  );
+                                    <Route path="products">
+                                        <Route index element={<ProductsList/>}/>
+                                        <Route path="create" element={<ProductsCreate/>}/>
+                                    </Route>
+                                </Route>
+                            </Routes>
+                            <Toaster />
+                            <RefineKbar />
+                            <UnsavedChangesNotifier />
+                            <DocumentTitleHandler />
+                        </Refine>
+                        <DevtoolsPanel />
+                    </DevtoolsProvider>
+                </ThemeProvider>
+            </RefineKbarProvider>
+        </BrowserRouter>
+    );
 }
 
 export default App;

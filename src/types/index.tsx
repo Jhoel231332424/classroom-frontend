@@ -1,12 +1,20 @@
-export type Subject = {
+export type ProductStatus = "active" | "inactive";
+export type Product = {
     id: number;
     name: string;
-    code: string;
-    description: string;
-    department: string;
+    brand?: string | null;
+    sku?: string | null;
+    barcode?: string | null;
+    description?: string | null;
+    baseUnit: string;
+    attributes?: Record<string, string | number | boolean> | null;
+    currentStock: number;
+    defaultMarginPercent: string;
+    suggestedSalePrice?: string | null;
+    status: ProductStatus;
     createdAt?: string;
+    updatedAt?: string;
 };
-
 export type ListResponse<T = unknown> = {
     data?: T[];
     pagination?: {
@@ -65,11 +73,6 @@ export interface UploadWidgetProps {
     disabled?: boolean;
 }
 
-export enum UserRole {
-    STUDENT = "student",
-    TEACHER = "teacher",
-    ADMIN = "admin",
-}
 
 export type User = {
     id: string;
@@ -77,46 +80,15 @@ export type User = {
     updatedAt: string;
     email: string;
     name: string;
-    role: UserRole;
     image?: string;
     imageCldPubId?: string;
     department?: string;
 };
 
-export type Schedule = {
-    day: string;
-    startTime: string;
-    endTime: string;
-};
 
-export type Department = {
-    id: number;
-    name: string;
-    description: string;
-};
 
-export type ClassDetails = {
-    id: number;
-    name: string;
-    description: string;
-    status: "active" | "inactive";
-    capacity: number;
-    courseCode: string;
-    courseName: string;
-    bannerUrl?: string;
-    bannerCldPubId?: string;
-    subject?: Subject;
-    teacher?: User;
-    department?: Department;
-    schedules: Schedule[];
-    inviteCode?: string;
-};
 
-export type SignUpPayload = {
-    email: string;
-    name: string;
-    password: string;
-    image?: string;
-    imageCldPubId?: string;
-    role: UserRole;
-};
+
+
+
+

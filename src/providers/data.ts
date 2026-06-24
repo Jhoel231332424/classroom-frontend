@@ -21,6 +21,7 @@ const options: CreateDataProviderOptions = {
                 params.limit = pageSize;
             }
 
+
             filters?.forEach((filter) => {
                 const field = "field" in filter ? filter.field : "";
                 const value = String(filter.value);
@@ -29,30 +30,28 @@ const options: CreateDataProviderOptions = {
                     params.role = value;
                 }
 
-                if (resource === "departments") {
-                    if (field === "name" || field === "code") params.search = value;
-                }
-
                 if (resource === "users") {
                     if (field === "search" || field === "name" || field === "email") {
                         params.search = value;
                     }
                 }
 
-                if (resource === "subjects") {
-                    if (field === "department") params.department = value;
-                    if (field === "name" || field === "code") params.search = value;
-                }
-
-                if (resource === "classes") {
-                    if (field === "name") params.search = value;
-                    if (field === "subject") params.subject = value;
-                    if (field === "teacher") params.teacher = value;
+                if (resource === "products") {
+                    if (
+                        field === "search" ||
+                        field === "name" ||
+                        field === "brand" ||
+                        field === "sku" ||
+                        field === "barcode"
+                    ) {
+                        params.search = value;
+                    }
                 }
             });
 
             return params;
         },
+
 
         mapResponse: async (response) => {
             const payload: ListResponse = await response.clone().json();
