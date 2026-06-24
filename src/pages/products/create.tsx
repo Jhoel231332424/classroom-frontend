@@ -92,13 +92,11 @@ const ProductsCreate = () => {
         try {
             await onFinish({
                 ...values,
-                brand: values.brand || null,
-                sku: values.sku || null,
-                barcode: values.barcode || null,
-                description: values.description || null,
-                attributes: null,
-                suggestedSalePrice:
-                    values.suggestedSalePrice === "" ? null : values.suggestedSalePrice,
+                brand: values.brand || undefined,
+                sku: values.sku || undefined,
+                barcode: values.barcode || undefined,
+                description: values.description || undefined,
+                suggestedSalePrice: values.suggestedSalePrice === "" ? undefined : values.suggestedSalePrice,
             });
         } catch (error) {
             console.error("Error creating product:", error);
@@ -139,7 +137,7 @@ const ProductsCreate = () => {
                                                 Nombre <span className="text-orange-600">*</span>
                                             </FormLabel>
                                             <FormControl>
-                                                <Input placeholder="Candado tamaño 30" {...field} />
+                                                <Input placeholder="Candado tamaño 30" {...field} value={field.value || ""}/>
                                             </FormControl>
                                             <FormMessage />
                                         </FormItem>
@@ -153,7 +151,7 @@ const ProductsCreate = () => {
                                         <FormItem>
                                             <FormLabel>Marca</FormLabel>
                                             <FormControl>
-                                                <Input placeholder="Lions LLN" {...field} />
+                                                <Input placeholder="Lions LLN" {...field} value={field.value || ""} />
                                             </FormControl>
                                             <FormMessage />
                                         </FormItem>
@@ -167,7 +165,7 @@ const ProductsCreate = () => {
                                         <FormItem>
                                             <FormLabel>SKU</FormLabel>
                                             <FormControl>
-                                                <Input placeholder="CAND-LIONS-30" {...field} />
+                                                <Input placeholder="CAND-LIONS-30" {...field} value={field.value || ""}/>
                                             </FormControl>
                                             <FormMessage />
                                         </FormItem>
@@ -181,7 +179,7 @@ const ProductsCreate = () => {
                                         <FormItem>
                                             <FormLabel>Código de barras</FormLabel>
                                             <FormControl>
-                                                <Input placeholder="7790000000000" {...field} />
+                                                <Input placeholder="7790000000000" {...field} value={field.value || ""} />
                                             </FormControl>
                                             <FormMessage />
                                         </FormItem>
@@ -260,7 +258,8 @@ const ProductsCreate = () => {
                                         <FormItem>
                                             <FormLabel>Precio sugerido</FormLabel>
                                             <FormControl>
-                                                <Input type="number" min={0} step="0.01" placeholder="15.50" {...field} />
+                                                <Input type="number" min={0} step="0.01" placeholder="15.50"
+                                                       {...field} value={field.value ?? ""} />
                                             </FormControl>
                                             <FormMessage />
                                         </FormItem>
@@ -303,6 +302,7 @@ const ProductsCreate = () => {
                                                     placeholder="Descripción del producto..."
                                                     className="min-h-28"
                                                     {...field}
+                                                    value={field.value || ""}
                                                 />
                                             </FormControl>
                                             <FormMessage />
